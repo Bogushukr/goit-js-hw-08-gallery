@@ -30,10 +30,14 @@ const galleryItem = ({preview, original, description }) => {
 
 refs.gallery.append(...images.map(galleryItem));
 
-function onModalClose(evet) {
-  if (evet.target.nodeName === 'BUTTON' || evet.target.nodeName !== 'IMG') {
-    refs.modal.classList.remove('is-open');
-    refs.lightboxImg.src = '';
+function removeClass() {
+  refs.modal.classList.remove('is-open');
+  refs.lightboxImg.src = '';
+}
+
+function onModalClose(event) {
+  if (event.target.nodeName === 'BUTTON' || event.target.nodeName !== 'IMG') {
+    removeClass();
   }
 }
 
@@ -56,8 +60,7 @@ refs.gallery.addEventListener('click', onImgOpen);
 
 function onEscKeyDown(evet) {
   if (refs.modal.classList.contains('is-open') && evet.code === 'Escape') {
-    refs.modal.classList.remove('is-open');
-    refs.lightboxImg.src = '';
+    removeClass();
   }
 }
 
@@ -65,7 +68,7 @@ window.addEventListener('keydown', onEscKeyDown);
 
 function carousel(event) {
     if (event.code === 'ArrowRight') {
-    if (currentIndex === 8) {
+    if (currentIndex === imgArr.length - 1) {
       currentIndex = 0;
     } else {
       currentIndex += 1;
