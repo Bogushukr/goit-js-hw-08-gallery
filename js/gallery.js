@@ -8,7 +8,7 @@ const refs = {
   lightboxClose: document.querySelector('button[data-action="close-lightbox"]'),
 };
 
-const galleryList = ({preview, original, description }) => {
+const galleryItem = ({preview, original, description }) => {
   const elementLiRef = document.createElement('li');
   elementLiRef.classList.add('gallery__item');
     
@@ -28,35 +28,34 @@ const galleryList = ({preview, original, description }) => {
   return elementLiRef; 
 };
 
-refs.gallery.append(...images.map(galleryList));
+refs.gallery.append(...images.map(galleryItem));
 
-function onClick(elem) {
-  if (elem.target.nodeName === 'BUTTON' || elem.target.nodeName !== 'IMG') {
+function onModalClose(evet) {
+  if (evet.target.nodeName === 'BUTTON' || evet.target.nodeName !== 'IMG') {
     refs.modal.classList.remove('is-open');
     refs.lightboxImg.src = '';
   }
 }
 
-refs.modal.addEventListener('click', onClick);
+refs.modal.addEventListener('click', onModalClose);
 
 let currentIndex = 0;
-
-function onClickImg(elem) {
 const imgArr = images.map(item => item.original);
 
-  elem.preventDefault();
-  if (elem.target.nodeName === 'IMG') {
+function onImgOpen(event) {
+  event.preventDefault();
+  if (event.target.nodeName === 'IMG') {
     refs.modal.classList.add('is-open');
-    refs.lightboxImg.src = elem.target.dataset.source;
+    refs.lightboxImg.src = event.target.dataset.source;
     currentIndex = imgArr.indexOf(refs.lightboxImg.src);
   }
 }
 
-refs.gallery.addEventListener('click', onClickImg);
+refs.gallery.addEventListener('click', onImgOpen);
 
 
-function onEscKeyDown(elem) {
-  if (refs.modal.classList.contains('is-open') && elem.code === 'Escape') {
+function onEscKeyDown(evet) {
+  if (refs.modal.classList.contains('is-open') && evet.code === 'Escape') {
     refs.modal.classList.remove('is-open');
     refs.lightboxImg.src = '';
   }
@@ -64,24 +63,22 @@ function onEscKeyDown(elem) {
 
 window.addEventListener('keydown', onEscKeyDown);
 
-function carousel(elem) {
-  this.Array = images.map(item => item.original);
-  
-  if (elem.code === 'ArrowRight') {
+function carousel(event) {
+    if (event.code === 'ArrowRight') {
     if (currentIndex === 8) {
       currentIndex = 0;
     } else {
       currentIndex += 1;
     }
-    refs.lightboxImg.src = Array[currentIndex];
+    refs.lightboxImg.src = imgArr[currentIndex];
   }
-  if (elem.code === 'ArrowLeft') {
+  if (event.code === 'ArrowLeft') {
     if (currentIndex === 0) {
-      currentIndex = Array.length - 1;
+      currentIndex = imgArr.length - 1;
     } else {
       currentIndex -= 1;
     }
-    refs.lightboxImg.src = Array[currentIndex];
+    refs.lightboxImg.src = imgArr[currentIndex];
   }
 }
 
